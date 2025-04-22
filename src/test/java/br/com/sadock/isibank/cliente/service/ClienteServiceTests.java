@@ -1,13 +1,14 @@
 package br.com.sadock.isibank.cliente.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import br.com.sadock.isibank.dto.ClienteDTO;
 import br.com.sadock.isibank.service.cliente.IClienteService;
@@ -22,7 +23,7 @@ public class ClienteServiceTests {
 	private ClienteDTO reqTelDupl;
 	private Integer idValido;
 	
-	@Mock
+	@Autowired
 	private IClienteService service;
 	
 	@BeforeEach
@@ -34,23 +35,23 @@ public class ClienteServiceTests {
 		reqInvalida = new ClienteDTO("Cliente Inválido", null, null, null, null);
 		idValido = 1;
 		
-		Mockito.when(service.cadastrarCliente(reqValida)).thenReturn(idValido);
-		Mockito.when(service.cadastrarCliente(reqInvalida)).thenThrow(new ConstraintViolationException(null));
-		Mockito.when(service.cadastrarCliente(reqEmailDupl)).thenReturn(null);
-		Mockito.when(service.cadastrarCliente(reqCpfDupl)).thenReturn(null);
-		Mockito.when(service.cadastrarCliente(reqTelDupl)).thenReturn(null);
+//		Mockito.when(service.cadastrarCliente(reqValida)).thenReturn(idValido);
+//		Mockito.when(service.cadastrarCliente(reqInvalida)).thenThrow(new ConstraintViolationException(null));
+//		Mockito.when(service.cadastrarCliente(reqEmailDupl)).thenReturn(null);
+//		Mockito.when(service.cadastrarCliente(reqCpfDupl)).thenReturn(null);
+//		Mockito.when(service.cadastrarCliente(reqTelDupl)).thenReturn(null);
 		
 	}
 	
 	@Test
 	public void deveCadastrarClienteValido() {
-		assertEquals(service.cadastrarCliente(reqValida), idValido);
+		assertNotNull(service.cadastrarCliente(reqValida));
 		
 	}
 	
 	@Test
 	public void deveRejeitarClienteInvalido() {
-		assertThrows(ConstraintViolationException.class, () -> {
+		assertThrows(DataIntegrityViolationException.class, () -> {
 			service.cadastrarCliente(reqInvalida);
 		});
 	}
