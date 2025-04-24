@@ -1,6 +1,7 @@
 package br.com.sadock.isibank.service.cliente;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.sadock.isibank.dto.ClienteDTO;
@@ -22,7 +23,12 @@ public class ClienteServiceImpl implements IClienteService {
 			return null;
 		}
 		
-		return repo.save(novo.toCliente()).getIdCliente();
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		Cliente cliente = novo.toCliente();
+		String novaSenha = encoder.encode(cliente.getSenha());
+		cliente.setSenha(novaSenha);
+		
+		return repo.save(cliente).getIdCliente();
 	}
 
 	@Override
