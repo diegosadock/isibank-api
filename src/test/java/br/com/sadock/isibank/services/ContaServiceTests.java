@@ -1,4 +1,4 @@
-package br.com.sadock.isibank.cliente.service;
+package br.com.sadock.isibank.services;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
