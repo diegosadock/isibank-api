@@ -24,7 +24,7 @@ public class ContaServiceTests {
 	@BeforeEach
 	public void setup() {
 		contaValida = new ContaDTO(1, 1, 100.0, 0.0, 10);
-		contaInvalida = new ContaDTO(1, 1, 100.0, 0.0, 2);
+		contaInvalida = new ContaDTO(1, 1, 100.0, 0.0, 100);
 	}
 	
 	@Test
