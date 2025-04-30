@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import br.com.sadock.isibank.dto.FaceDTO;
+import br.com.sadock.isibank.dto.RecognitionDTO;
 import br.com.sadock.isibank.util.FaceMode;
 import jakarta.xml.bind.DatatypeConverter;
 
@@ -46,12 +47,12 @@ public class FaceRecognitionImpl implements IFaceRecognition {
 	
 
 	@Override
-	public String toImage(String base64Content) {
+	public String toImage(FaceDTO faceData) {
 		try {
-			int timestamp = (int) System.currentTimeMillis() / 1000;
-			timestamp = (timestamp < 0) ? timestamp * -1 : timestamp;
-			String fileName = tmpFolder + File.separator + timestamp + ".png";
-			byte[] imageData = DatatypeConverter.parseBase64Binary(base64Content);
+//			int timestamp = (int) System.currentTimeMillis() / 1000;
+//			timestamp = (timestamp < 0) ? timestamp * -1 : timestamp;
+			String fileName = tmpFolder + File.separator + faceData.getIdCliente() + ".png";
+			byte[] imageData = DatatypeConverter.parseBase64Binary(faceData.getData());
 			File newImage = new File(fileName);
 			OutputStream output = new BufferedOutputStream(new FileOutputStream(newImage));
 			output.write(imageData);
@@ -122,10 +123,10 @@ public class FaceRecognitionImpl implements IFaceRecognition {
 		}
 		
 		File f = new File("LBPHTraining.yml");
-		if (f != null) {
-			System.out.println("Training file exists!");
-			recognizer.read("LBPHTraining.yml");
-		}
+//		if (f != null) {
+//			System.out.println("Training file exists!");
+//			recognizer.read("LBPHTraining.yml");
+//		}
 		
 		recognizer.train(photos, labels);
 		recognizer.save("LBPHTraining.yml");
@@ -136,7 +137,7 @@ public class FaceRecognitionImpl implements IFaceRecognition {
 
 
 	@Override
-	public Double performRecognition(FaceDTO data) {
+	public RecognitionDTO performRecognition(FaceDTO data) {
 		double finalConfidence = 0;
 		
 		try {
@@ -169,15 +170,19 @@ public class FaceRecognitionImpl implements IFaceRecognition {
 			recognizer.predict(detectedFace, labels, confidence);
 			finalConfidence = confidence.get(0) * 100 / 100;
 			
-			System.out.println("Confidence to face = " + confidence.get() + " and label = " + labels.get(0));
-			System.out.println("Final confidence = " + finalConfidence);
+//			System.out.println("Confidence to face = " + confidence.get() + " and label = " + labels.get(0));
+//			System.out.println("Final confidence = " + finalConfidence);
+			
+			if (labels.get(0) > 0) {
+				return new RecognitionDTO(finalConfidence, labels.get(0));
+			}
 			
 		} 
 		catch (Exception ex) {
 			ex.printStackTrace();
-			return -1.0;
+			
 		}
-		return finalConfidence;
+		return null;
 	}
 	
 	

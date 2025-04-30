@@ -33,7 +33,7 @@ public class WebConfigSecurity {
 			auth.requestMatchers(new AntPathRequestMatcher("/clientes", "POST")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/login", "POST")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/face/register", "POST")).permitAll()
-				.requestMatchers(new AntPathRequestMatcher("/face/training", "GET")).permitAll()
+//				.requestMatchers(new AntPathRequestMatcher("/face/training", "GET")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/face/recognize", "POST")).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
 				.anyRequest().authenticated();
